@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import CodeArea from "./CodeArea.jsx"
 
 const Caller = ({ socket, userN }) => {
     //Needed state for caller function.
@@ -144,6 +145,8 @@ const Caller = ({ socket, userN }) => {
 
     useEffect(() => {
         GetLocalMedia();
+        pauseVideo();
+        pauseAudio();
     }, []);
 
     useEffect(() => {
@@ -178,6 +181,7 @@ const Caller = ({ socket, userN }) => {
             <input type="button" onClick={generateOffer} value="call" />
             <input type="button" onClick={pauseVideo} value="pauseVideo" />
             <input type="button" onClick={pauseAudio} value="pauseAudio" />
+            <CodeArea />
         </>
     );
 };

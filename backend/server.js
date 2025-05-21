@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         const removeUser = users.filter((e) => e.socketId !== socket.id);
         users = removeUser;
-        console.log(users, socket.id, "f it");
+        console.log(socket.id, "f it");
     });
 });
 
