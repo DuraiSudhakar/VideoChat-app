@@ -7,12 +7,13 @@ import {requireAuth} from "./middleware.js"
 
 const app = express();
 const server = createServer(app);
+
+app.use(cors()); 
 const io = new Server(server, {
     cors: { origin: "*" }, 
 });
 
 app.use(express.json());
-app.use(cors()); 
 
 app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {

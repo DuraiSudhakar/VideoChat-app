@@ -34,7 +34,7 @@ export const userSignup = async (req, res)=>{
             [email, hash]
         );
         const token = createToken(email)
-        res.status(201).json({user: result.rows[0].email}, token);
+        res.status(201).json({email: result.rows[0].email}, token);
     } catch (err) {
         console.error("Error creating user:", err);
         if (err.code === "23505") {
@@ -63,7 +63,7 @@ export const userLogin = async (req, res) => {
             return res.status(404).json({ error: "Invalid password" });
         }
         const token = createToken(email);
-        res.status(200).json({user: user.rows[0].email, token});
+        res.status(200).json({email: user.rows[0].email, token});
     } catch (err) {
         console.error("Error fetching user by email:", err);
         res.status(500).json({ error: "Internal server error" });

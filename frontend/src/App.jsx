@@ -8,7 +8,7 @@ import { AuthContextProvider } from "./context/authContext";
 import Navbar from "./components/Navbar";
 
 function App() {
-    const socket = io("http://localhost:3000");
+    const socket = io("https://call-intern-code-api.onrender.com");
 
     return (
         <AuthContextProvider>
