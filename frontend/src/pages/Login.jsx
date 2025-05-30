@@ -11,24 +11,35 @@ const Login = () => {
     }
 
     return (
-        <Box sx={{ p: 3 }}>
-            <TextField
-                label="Username"
-                fullWidth
-                margin="normal"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-                label="Password"
-                fullWidth
-                margin="normal"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button fullWidth variant="contained" onClick={handleSubmit}>
-                Login
-            </Button>
+        <Box
+            sx={{
+                height: "90vh",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <Box sx={{ p: 3 }}>
+                <TextField
+                    label="Username"
+                    fullWidth
+                    margin="normal"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                    label="Password"
+                    fullWidth
+                    margin="normal"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button fullWidth variant="contained" onClick={handleSubmit}>
+                    Login
+                </Button>
+            </Box>
         </Box>
     );
 }

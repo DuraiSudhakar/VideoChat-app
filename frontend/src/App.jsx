@@ -14,16 +14,11 @@ function App() {
         <AuthContextProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <Home socket={socket} />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/login" element={<Login />} />
+                    <Route path="/" element={<Navbar/>}>
+                        <Route path="/home" element={<Home socket={socket} />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/login" element={<Login />} />
+                    </Route>
                 </Routes>
             </BrowserRouter>
         </AuthContextProvider>

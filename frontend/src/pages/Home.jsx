@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Caller from "../components/Caller";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = ({ socket }) => {
     const [roomID, setRoomID] = useState("");
@@ -9,6 +10,7 @@ const Home = ({ socket }) => {
     const [roomStatusMessage, setRoomStatusMessage] = useState(""); 
     const { user } = useAuthContext();
     useEffect(() => {
+        
         if (socket) {
             socket.on("room-full", (data) => {
                 console.error("Room is full:", data.error);

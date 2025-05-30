@@ -1,31 +1,36 @@
-import { Link, Outlet } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
+import {Link, Navigate, Outlet} from 'react-router-dom'
+import { useAuthContext } from '../hooks/useAuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
-    const { user, dispatch } = useAuthContext();
-
+    const { user } = useAuthContext()
+    const { dispatch } = useAuthContext();
+    const navigate = useNavigate();
     const removeUser = () => {
         localStorage.removeItem("user");
         dispatch({ type: "LOGOUT" });
-    };
-
+        if (!user) {
+            navigate("/login");
+        }
+    }
+    //
     return (
         <>
-            <nav
-                style={{
-                    margin: "0px 15px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                }}
-            >
+            {user && <Navigate to="/home" />}
+            <nav style={{
+                margin: "0px 15px",
+                display: "flex",
+                justifyContent: "space-between"
+            }}>
                 <h2>Call Intern</h2>
-                {user ? (
-                    <div style={{ margin: "13px" }}>
+                {user && (
+                    <div style={{margin:"13px"}}>
                         <button onClick={removeUser}>Log out</button>
                     </div>
-                ) : (
-                    <div style={{ margin: "13px" }}>
-                        <Link to="/login">Login</Link>{" "}
+                )}
+                {!user && (
+                    <div style={{ width: "200px", margin: "13px", display:"flex", justifyContent:"space-evenly", alignItems:"center" }}>
+                        <Link to="/login">Login</Link>
                         <Link to="/signup">Sign Up</Link>
                     </div>
                 )}
@@ -33,6 +38,6 @@ const Navbar = () => {
             <Outlet />
         </>
     );
-};
+}
 
-export default Navbar;
+export default Navbar
