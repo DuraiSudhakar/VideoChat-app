@@ -60,7 +60,6 @@ const Caller = ({ socket, userN, roomID }) => {
                 offer,
                 roomID,
             });
-            console.log("Offer created and sent.");
 
             peerConnectionRef.current.onicecandidate = ({ candidate }) => {
                 if (candidate) {
@@ -70,7 +69,6 @@ const Caller = ({ socket, userN, roomID }) => {
                         type: "sender", // "sender" for the one sending the offer
                         roomID,
                     });
-                    console.log("Sending ICE candidate (sender):", candidate);
                 }
             };
         } catch (error) {
@@ -83,7 +81,6 @@ const Caller = ({ socket, userN, roomID }) => {
             if (!answer) return;
             try {
                 await peerConnectionRef.current.setRemoteDescription(answer);
-                console.log("Answer received and set as remote description.");
             } catch (error) {
                 console.error(
                     "Error setting remote description from answer:",
@@ -98,7 +95,6 @@ const Caller = ({ socket, userN, roomID }) => {
                 // "receiver" for the one who sent the answer
                 try {
                     await peerConnectionRef.current.addIceCandidate(ice);
-                    console.log("Added ICE candidate (receiver):", ice);
                 } catch (err) {
                     console.error(
                         "Error adding ICE candidate (receiver):",
@@ -118,18 +114,15 @@ const Caller = ({ socket, userN, roomID }) => {
                 peerConnectionRef.current.localDescription &&
                 peerConnectionRef.current.localDescription.type === "offer"
             ) {
-                console.log("Already made an offer, ignoring incoming offer.");
                 return;
             }
 
             try {
                 await peerConnectionRef.current.setRemoteDescription(offer);
-                console.log("Offer received and set as remote description.");
 
                 const answer = await peerConnectionRef.current.createAnswer();
                 await peerConnectionRef.current.setLocalDescription(answer);
                 socket.emit("newAnswer", { userId: socket.id, answer, roomID });
-                console.log("Answer created and sent.");
 
                 peerConnectionRef.current.onicecandidate = ({ candidate }) => {
                     if (candidate) {
@@ -139,10 +132,6 @@ const Caller = ({ socket, userN, roomID }) => {
                             type: "receiver", // "receiver" for the one sending the answer
                             roomID,
                         });
-                        console.log(
-                            "Sending ICE candidate (receiver):",
-                            candidate
-                        );
                     }
                 };
             } catch (error) {
@@ -156,7 +145,6 @@ const Caller = ({ socket, userN, roomID }) => {
                 // "sender" for the one who sent the offer
                 try {
                     await peerConnectionRef.current.addIceCandidate(ice);
-                    console.log("Added ICE candidate (sender):", ice);
                 } catch (err) {
                     console.error("Error adding ICE candidate (sender):", err);
                 }
@@ -168,7 +156,6 @@ const Caller = ({ socket, userN, roomID }) => {
         const track = localStream?.getTracks().find((t) => t.kind === "video");
         if (track) {
             track.enabled = !track.enabled;
-            console.log("Video track enabled:", track.enabled);
         }
     };
 
@@ -176,7 +163,6 @@ const Caller = ({ socket, userN, roomID }) => {
         const track = localStream?.getTracks().find((t) => t.kind === "audio");
         if (track) {
             track.enabled = !track.enabled;
-            console.log("Audio track enabled:", track.enabled);
         }
     };
 

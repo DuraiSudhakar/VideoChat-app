@@ -14,7 +14,6 @@ export const useLogin = () => {
             }
         );
         const user = await response.json();
-        console.log(user)
 
         if (!response.ok) {
             setError(user.error);

@@ -18,7 +18,7 @@ const Output = ({ editorRef, language, socket, roomID }) => {
             socket.emit("Outputed", { output: result.output, roomID });
             result.stderr ? setIsError(true) : setIsError(false);
         } catch (err) {
-            console.log(err);
+            setIsError(true);
         } finally {
             setIsLoading(false);
         }
