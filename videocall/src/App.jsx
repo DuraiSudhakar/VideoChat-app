@@ -1,17 +1,27 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { io } from "socket.io-client";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import './App.css';
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import { AuthContextProvider } from "./context/authContext";
+import Navbar from "./components/Navbar";
 
 function App() {
     const socket = io("http://localhost:3000");
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Home socket={socket} />} />
-            </Routes>
-        </BrowserRouter>
+        <AuthContextProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Navbar/>}>
+                        <Route path="/home" element={<Home socket={socket} />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/login" element={<Login />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </AuthContextProvider>
     );
 }
 

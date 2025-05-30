@@ -1,13 +1,31 @@
 /* Language Selector Dropdown Styles */
+
+.videoFrame{
+  margin: 0;
+  padding: 0;
+  height: 200px;
+  border-radius: 5%;
+}
+
+.gridContainer{
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 85% 70px;
+  grid-template-areas: 
+    "call call code"
+    "footer footer output";
+}
+
 .dropDownArea {
   position: relative;
   display: inline-block;
-  min-width: 180px;
+  min-width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 .dropDownButton {
   width: 100%;
+  margin-bottom: 8px;
   padding: 10px 12px;
   background-color: #292828;
   border: 1px solid #5a5b5c;
@@ -24,9 +42,9 @@
 }
 
 .dropDownButton:hover {
-  background-color: #f7fafc;
-  border-color: #cbd5e0;
-  color: #292828; 
+  background-color: #3a3c3d;
+  border-color: #303131;
+  color: #e2e3e4; 
 }
 
 .dropDownButton:focus {
@@ -49,12 +67,12 @@
   margin: 4px 0 0;
   padding: 6px 0;
   list-style: none;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+  background-color: #292828;
+  border: 1px solid #5a5b5c;
   border-radius: 6px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 10;
-  max-height: 300px;
+  max-height: 200px;
   overflow-y: auto;
 }
 
@@ -69,7 +87,7 @@
   background: none;
   border: none;
   font-size: 14px;
-  color: #1a202c;
+  color: #e2e3e4;
   text-align: left;
   cursor: pointer;
   display: flex;
@@ -79,7 +97,9 @@
 }
 
 .dropDownListItems button:hover {
-  background-color: #f7fafc;
+  background-color: #3a3c3d;
+  border-color: #303131;
+  color: #e2e3e4; 
 }
 
 .versions {
