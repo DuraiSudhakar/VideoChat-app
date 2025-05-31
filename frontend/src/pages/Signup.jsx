@@ -42,6 +42,8 @@ const Signup = () => {
                     Sign Up
                 </Button>
             </Box>
+
+            {error && <p style={{ color: "red" }}>{error}</p>}
         </Box>
     );
 };

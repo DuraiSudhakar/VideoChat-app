@@ -14,6 +14,7 @@ export const userSignup = async (req, res)=>{
     if (!email || !password) {
         return res.status(400).json({ error: "Enter all fields" });
     }
+    
     try {
         const exist = await pool.query("SELECT * FROM users WHERE email = $1", [
             email,
@@ -41,7 +42,7 @@ export const userSignup = async (req, res)=>{
             // PostgreSQL error code for unique violation
             return res.status(409).json({ error: "Email already exists" });
         }
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: err });
     }
 }
 
@@ -66,6 +67,6 @@ export const userLogin = async (req, res) => {
         res.status(200).json({email: user.rows[0].email, token});
     } catch (err) {
         console.error("Error fetching user by email:", err);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: err });
     }
 };

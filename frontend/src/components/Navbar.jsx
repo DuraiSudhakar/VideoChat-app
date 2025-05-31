@@ -9,9 +9,7 @@ const Navbar = () => {
     const removeUser = () => {
         localStorage.removeItem("user");
         dispatch({ type: "LOGOUT" });
-        if (!user) {
-            navigate("/login");
-        }
+        navigate("/login");
     }
     //
     return (
