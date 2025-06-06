@@ -25,11 +25,19 @@ const Signup = () => {
         >
             <Box sx={{ p: 3 }}>
                 <TextField
-                    label="Username"
+                    label="Email"
                     fullWidth
                     margin="normal"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    sx={{
+                        input: { color: "white" },
+                        label: { color: "white" },
+                        "& .MuiOutlinedInput-root": {
+                            "&:hover fieldset": { borderColor: "lightgray" },
+                            "&.Mui-focused fieldset": { borderColor: "white" },
+                        },
+                    }}
                 />
                 <TextField
                     label="Password"
@@ -37,6 +45,14 @@ const Signup = () => {
                     margin="normal"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    sx={{
+                        input: { color: "white" },
+                        label: { color: "white" },
+                        "& .MuiOutlinedInput-root": {
+                            "&:hover fieldset": { borderColor: "lightgray" },
+                            "&.Mui-focused fieldset": { borderColor: "white" },
+                        },
+                    }}
                 />
                 <Button fullWidth variant="contained" onClick={handleSubmit}>
                     Sign Up

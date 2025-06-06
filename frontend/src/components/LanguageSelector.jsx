@@ -1,47 +1,64 @@
-import { useEffect } from "react";
-import { useState, useRef } from "react";
-import { LANGUAGE_VERSIONS } from "./constants";
-function LanguageSelector({language, onSelect}) {
-    const [isOpen, setIsOpen] = useState(false);
-    const menuRef = useRef(null);
-    const languages = Object.entries(LANGUAGE_VERSIONS);
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-    useEffect(() => {
-        const handleOutsideClick = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        }
-        document.addEventListener("mousedown", handleOutsideClick);
-        return () => document.removeEventListener("mousedown", handleOutsideClick);
-    },[])
+const LANGUAGE_OPTIONS = [
+    { value: "javascript", label: "JavaScript" },
+    { value: "python", label: "Python" },
+    { value: "java", label: "Java" },
+    { value: "cpp", label: "C++" },
+    { value: "typescript", label: "TypeScript" },
+    { value: "html", label: "HTML" },
+    { value: "css", label: "CSS" },
+];
+
+function LanguageSelector({language, onSelect}) {
 
     return (
-        <div className="dropDownArea" ref={menuRef}>
-            <button
-                className="dropDownButton"
-                onClick={() => setIsOpen((prev) => !prev)}
+        <FormControl fullWidth sx={{ mb: 2 }}>
+            {" "}
+            {/* mb-4 */}
+            <InputLabel id="language-select-label" sx={{ color: "#9ca3af" }}>
+                Programming Language
+            </InputLabel>{" "}
+            {/* text-gray-300 mb-2 */}
+            <Select
+                labelId="language-select-label"
+                value={language}
+                onChange={(e) => onSelect(e.target.value)}
+                sx={{
+                    width: "100%",
+                    px: 1.5, // px-3 (adjust padding to match default Select)
+                    py: 1, // py-2 (adjust padding)
+                    backgroundColor: "#1f2937", // bg-gray-800
+                    border: "1px solid #374151", // border border-gray-600
+                    borderRadius: "8px", // rounded-lg
+                    color: "white",
+                    fontSize: "0.875rem", // text-sm
+                    ".MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#374151", // default border
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#374151", // hover border
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#3b82f6", // focus:border-blue-500
+                        borderWidth: "2px", // focus:ring-2
+                    },
+                    "& .MuiSelect-icon": {
+                        color: "white", // dropdown icon color
+                    },
+                    "&.Mui-disabled": {
+                        opacity: 0.5, // disabled:opacity-50
+                        cursor: "not-allowed", // disabled:cursor-not-allowed
+                    },
+                }}
             >
-                {language}
-            </button>
-            {isOpen && (
-                <ul className="dropDownList">
-                    {languages.map(([language, version]) => (
-                        <li key={language} className="dropDownListItems">
-                            <button onClick={()=>onSelect(language)}>
-                                {language}{" "}
-                                <span
-                                    className="versions"
-                                    style={{ display: "inline-block" }}
-                                >
-                                    {version}
-                                </span>
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+                {LANGUAGE_OPTIONS.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     );
 }
 

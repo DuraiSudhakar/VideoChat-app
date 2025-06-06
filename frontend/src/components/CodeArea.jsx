@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import Editor from "@monaco-editor/react";
+import Editor from "../components/Editor";
+import Output from "../components/Output";
+import LanguageSelector from "../components/LanguageSelector";
 import { Box } from "@mui/material";
-import {CODE_SNIPPETS} from "./constants"
-import LanguageSelector from "./LanguageSelector";
-import Output from "./Output";
+import { CODE_SNIPPETS } from "./constants";
 
-function CodeArea({socket, roomID}) {
+function CodeArea({socket, roomID, setLang, setCode}) {
     const editorRef = useRef()
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(`\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Alex");\n`);
     const [Language, setLanguage] = useState("javascript");
 
     function onMount(editor) {
@@ -17,12 +17,15 @@ function CodeArea({socket, roomID}) {
 
     function handleChange(val) {
         setValue(val);
+        setCode(val);
         socket.emit("newCodeInput", {input: val, roomID});
     }
 
     function onSelect(language){
         setLanguage(language);
+        setLang(language);
         setValue(CODE_SNIPPETS[language]);
+        setCode(CODE_SNIPPETS[language]);
         socket.emit("newLangSelect", { type: language, roomID });
     }
     useEffect(() => {
@@ -37,22 +40,27 @@ function CodeArea({socket, roomID}) {
     }, []);
 
     return (
-        <>
-            <Box sx={{ width: "500px", pr: "5px", gridArea: "code" }}>
-                <LanguageSelector language={Language} onSelect={onSelect} />
+        <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+            <LanguageSelector
+                language={Language}
+                onSelect={onSelect}
+            />
+
+            <Box sx={{ flex: 1, mb: 2 }}>
+                {" "}
+                {/* flex-1 mb-4 */}
                 <Editor
-                    width="100%"
-                    height="55vh"
-                    theme="vs-dark"
-                    onMount={onMount}
-                    defaultLanguage={CODE_SNIPPETS[Language]}
-                    language={Language}
                     value={value}
-                    onChange={(val) => handleChange(val)}
+                    onChange={handleChange}
+                    language={Language}
+                    onMount={onMount}
                 />
             </Box>
-            <Output roomID={roomID} editorRef={editorRef} language={Language} socket={socket} />
-        </>
+
+            <Output
+                editorRef={editorRef} language={Language} socket={socket} roomID={roomID}
+            />
+        </Box>
     );
 }
 
