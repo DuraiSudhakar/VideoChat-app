@@ -76,6 +76,18 @@ const Home = ({ socket }) => {
                                 margin="normal"
                                 value={roomID}
                                 onChange={(e) => setRoomID(e.target.value)}
+                                sx={{
+                                    input: { color: "white" },
+                                    label: { color: "white" },
+                                    "& .MuiOutlinedInput-root": {
+                                        "&:hover fieldset": {
+                                            borderColor: "lightgray",
+                                        },
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: "white",
+                                        },
+                                    },
+                                }}
                             />
                             <Button
                                 fullWidth
@@ -156,12 +168,16 @@ const Home = ({ socket }) => {
                                 socket={socket}
                                 roomID={roomID}
                                 setLang={setLanguage}
-                                setCode={setCode}    
+                                setCode={setCode}
                             />
                         </Box>
                     </Box>
 
-                    <StatusBar language={language} code={code} roomID={roomID} />
+                    <StatusBar
+                        language={language}
+                        code={code}
+                        roomID={roomID}
+                    />
                 </Box>
             )}
         </>
