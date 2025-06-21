@@ -61,6 +61,7 @@ const Caller = ({ socket, userN, roomID }) => {
             };
         } catch (error) {
             setError("Failed to access camera/microphone: " + error.message);
+            setTimeout(() => { setError(null) }, 3000);
             console.error("Error setting up media:", error);
         }
     };
@@ -111,6 +112,9 @@ const Caller = ({ socket, userN, roomID }) => {
             setIsConnected(true);
         } catch (error) {
             setError("Failed to start call: " + error.message);
+            setTimeout(() => {
+                setError(null);
+            }, 3000);
             console.error("Error creating or sending offer:", error);
         } finally {
             setIsConnecting(false);
@@ -466,7 +470,6 @@ const Caller = ({ socket, userN, roomID }) => {
             <Box
                 sx={{
                     position: "absolute",
-                    bottom: 200, // bottom-4
                     left: "25%",
                     transform: "translateX(-50%)", // -translate-x-1/2
                     display: "flex",

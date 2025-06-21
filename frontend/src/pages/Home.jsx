@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import StatusBar from "../components/StatusBar";
 import Caller from "../components/Caller";
 import CodeArea from "../components/CodeArea";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Button, TextField } from "@mui/material";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -11,17 +16,18 @@ const Home = ({ socket }) => {
     const [code, setCode] = useState(
         `\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Alex");\n`
     );
+    const [title, setTitle] = useState("Sample_code");
     const [roomID, setRoomID] = useState("");
     const [redirect, setRedirect] = useState(false);
-    const [roomStatusMessage, setRoomStatusMessage] = useState(""); 
+    const [roomStatusMessage, setRoomStatusMessage] = useState("");
+    const [executionHistory, setExecutionHistory] = useState([]);
     const { user } = useAuthContext();
     useEffect(() => {
-        
         if (socket) {
             socket.on("room-full", (data) => {
                 console.error("Room is full:", data.error);
-                setRoomStatusMessage(data.error); 
-                setRedirect(false); 
+                setRoomStatusMessage(data.error);
+                setRedirect(false);
             });
             socket.on("users-in-room", ({ count }) => {
                 console.log(`Current users in room: ${count}`);
@@ -31,7 +37,14 @@ const Home = ({ socket }) => {
                 socket.off("users-in-room");
             };
         }
-    }, [socket]); 
+    }, [socket]);
+
+    // Add to Output.jsx
+
+    const saveExecution = (code, output, isError) => {
+        setExecutionHistory((prev) => [...prev, { code, output, isError, title: title }]);
+        console.log(executionHistory);
+    };
 
     const joinRoom = () => {
         setRoomStatusMessage("");
@@ -39,7 +52,7 @@ const Home = ({ socket }) => {
         if (!user || !roomID) {
             return alert("Please enter your username and a Room ID.");
         }
-        socket.emit("join-room", { user: user.email, roomID }); 
+        socket.emit("join-room", { user: user.email, roomID });
         setRedirect(true);
     };
 
@@ -50,8 +63,8 @@ const Home = ({ socket }) => {
             return alert("Please enter your username.");
         }
         const newRoomID = crypto.randomUUID().split("-")[0];
-        setRoomID(newRoomID); 
-        socket.emit("join-room", { user: user.email, roomID: newRoomID }); 
+        setRoomID(newRoomID);
+        socket.emit("join-room", { user: user.email, roomID: newRoomID });
         setRedirect(true);
     };
 
@@ -127,6 +140,11 @@ const Home = ({ socket }) => {
                         flexDirection: "column",
                     }}
                 >
+                    <StatusBar
+                        language={language}
+                        code={code}
+                        roomID={roomID}
+                    />
                     <Box
                         component="main"
                         sx={{
@@ -140,14 +158,154 @@ const Home = ({ socket }) => {
                             },
                         }}
                     >
-                        <Box sx={{ flex: 1, p: 3 }}>
-                            {" "}
-                            {/* flex-1 p-6 */}
-                            <Caller
-                                socket={socket}
-                                userName={user.email}
-                                roomID={roomID}
-                            />
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Box sx={{ flex: 1, p: 3 }}>
+                                {" "}
+                                {/* flex-1 p-6 */}
+                                <Caller
+                                    socket={socket}
+                                    userName={user.email}
+                                    roomID={roomID}
+                                />
+                            </Box>
+                            <Box
+                                sx={{
+                                    backgroundColor: "#0a0a0a",
+                                    border: "1px solid #374151",
+                                    borderRadius: "8px",
+                                    width: "95%",
+                                    margin: "10px",
+                                    height: "47%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    overflow: "auto",
+                                }}
+                            >
+                                <TextField
+                                    label="Title for the Code"
+                                    margin="normal"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    sx={{
+                                        margin: "5px",
+                                        input: { color: "white" },
+                                        label: { color: "white" },
+                                        "& .MuiOutlinedInput-root": {
+                                            "& fieldset": {
+                                                borderColor: "#6b7280",
+                                            },
+                                            "&:hover fieldset": {
+                                                borderColor: "lightgray",
+                                            },
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: "white",
+                                            },
+                                        },
+                                    }}
+                                />
+                                <Typography
+                                    component="pre"
+                                        sx={{
+                                        margin:"5px",
+                                        fontSize: "0.875rem",
+                                        color: "#d1d5db",
+                                        fontFamily: "monospace",
+                                        whiteSpace: "pre-wrap",
+                                        flexShrink: 1, // Allows text to wrap
+                                    }}
+                                >
+                                    Code History:
+                                </Typography>
+                                {executionHistory.map((execution, index) => (
+                                    <Accordion
+                                        key={index}
+                                        sx={{
+                                            marginX: "15px",
+                                            marginY: "5px",
+                                            width: "450px",
+                                            "& .MuiOutlinedInput-root": {
+                                                "& fieldset": {
+                                                    borderColor: "none",
+                                                },
+                                            },
+                                            backgroundColor: execution.isError
+                                                ? "rgba(127, 29, 29, 0.2)"
+                                                : "#374151",
+                                            borderLeft: execution.isError
+                                                ? "4px solid #ef4444"
+                                                : "none",
+                                        }}
+                                    >
+                                        <AccordionSummary
+                                            sx={{ color: "#9ca3af" }}
+                                            expandIcon={
+                                                <ExpandMoreIcon
+                                                    sx={{ color: "#d1d5db" }}
+                                                />
+                                            } // Adjust icon color
+                                            aria-controls={`panel${index}-content`}
+                                            id={`panel${index}-header`}
+                                        >
+                                            {execution.title}
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Typography
+                                                component="pre"
+                                                sx={{
+                                                    fontSize: "0.875rem",
+                                                    color: "#d1d5db",
+                                                    fontFamily: "monospace",
+                                                    whiteSpace: "pre-wrap",
+                                                    flexShrink: 1, // Allows text to wrap
+                                                }}
+                                            >
+                                                Code:
+                                            </Typography>
+                                            <Typography
+                                                component="pre"
+                                                sx={{
+                                                    fontSize: "0.875rem",
+                                                    color: "#d1d5db",
+                                                    fontFamily: "monospace",
+                                                    whiteSpace: "pre-wrap",
+                                                    flexShrink: 1, // Allows text to wrap
+                                                }}
+                                            >
+                                                {execution.code}
+                                            </Typography>
+                                            <Typography
+                                                component="pre"
+                                                sx={{
+                                                    fontSize: "0.875rem",
+                                                    color: "#d1d5db",
+                                                    fontFamily: "monospace",
+                                                    whiteSpace: "pre-wrap",
+                                                    flexShrink: 1, // Allows text to wrap
+                                                }}
+                                            >
+                                                {"\nOutput:"}
+                                            </Typography>
+                                            <Typography
+                                                component="pre"
+                                                sx={{
+                                                    fontSize: "0.875rem",
+                                                    color: "#d1d5db",
+                                                    fontFamily: "monospace",
+                                                    whiteSpace: "pre-wrap",
+                                                }}
+                                            >
+                                                {execution.output}
+                                            </Typography>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                ))}
+                            </Box>
                         </Box>
 
                         <Box
@@ -165,6 +323,8 @@ const Home = ({ socket }) => {
                             {" "}
                             {/* flex-1 p-6 border-l border-gray-700 */}
                             <CodeArea
+                                title={title}
+                                saveExecution={saveExecution}
                                 socket={socket}
                                 roomID={roomID}
                                 setLang={setLanguage}
@@ -172,12 +332,6 @@ const Home = ({ socket }) => {
                             />
                         </Box>
                     </Box>
-
-                    <StatusBar
-                        language={language}
-                        code={code}
-                        roomID={roomID}
-                    />
                 </Box>
             )}
         </>

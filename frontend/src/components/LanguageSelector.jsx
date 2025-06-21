@@ -26,8 +26,8 @@ function LanguageSelector({language, onSelect}) {
                 onChange={(e) => onSelect(e.target.value)}
                 sx={{
                     width: "100%",
-                    px: 1.5, // px-3 (adjust padding to match default Select)
-                    py: 1, // py-2 (adjust padding)
+                    px: 0.25, // px-3 (adjust padding to match default Select)
+                    py: 0.25, // py-2 (adjust padding)
                     backgroundColor: "#1f2937", // bg-gray-800
                     border: "1px solid #374151", // border border-gray-600
                     borderRadius: "8px", // rounded-lg

@@ -3,12 +3,18 @@ import { Box, Button, Typography } from "@mui/material";
 import { Code, Play } from "lucide-react";
 import { execute } from "./api";
 
-const Output = ({ editorRef, language, socket, roomID }) => {
+const Output = ({
+    saveExecution,
+    editorRef,
+    language,
+    socket,
+    roomID,
+}) => {
     const [output, setOutput] = useState("Code result appers here");
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
 
-    const runCode = async() => {
+    const runCode = async () => {
         const sourceCode = editorRef.current.getValue();
         if (!sourceCode) return;
         try {
@@ -17,18 +23,20 @@ const Output = ({ editorRef, language, socket, roomID }) => {
             setOutput(result.output);
             socket.emit("Outputed", { output: result.output, roomID });
             result.stderr ? setIsError(true) : setIsError(false);
+            const hadError = !!result.stderr;
+            saveExecution(sourceCode, result.output, hadError);
         } catch (err) {
             setIsError(true);
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         socket.on("newOutput", (output) => {
             setOutput(output.output);
-        })
-    },[])
+        });
+    }, []);
 
     return (
         <Box
@@ -118,6 +126,6 @@ const Output = ({ editorRef, language, socket, roomID }) => {
             </Box>
         </Box>
     );
-}
+};
 
 export default Output;

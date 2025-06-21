@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material"; 
 import { Editor as MonacoEditor } from "@monaco-editor/react"; 
 
-const Editor = ({ value, onChange, language, onMount }) => {
+const Editor = ({ title, value, onChange, language, onMount }) => {
     const monacoOptions = {
         minimap: { enabled: false },
         fontSize: 14,
@@ -54,7 +54,7 @@ const Editor = ({ value, onChange, language, onMount }) => {
                 }}
             >
                 <Typography variant="caption" sx={{ color: "#9ca3af", ml: 1 }}>
-                    {language}
+                    {language +" "+ title}
                 </Typography>
             </Box>
 
